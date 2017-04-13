@@ -4,6 +4,14 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 var registerUser = require('./model/User.js');
+var https = require('https');
+var fs = require('fs');
+
+var options = {
+    key: fs.readFileSync('ssl/key.pem'),
+    ca   : fs.readFileSync('ssl/csr.pem'),
+    cert : fs.readFileSync('ssl/cert.pem'),
+}
 /*
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
@@ -26,16 +34,23 @@ app.post('/register', function(req, res) {
     console.log(username, password);
     var userDetail = { name: username, password: password };
     registerUser(userDetail);
-    res.end();
+    alert('Register Success!');
+    res.sendFile(__dirname + '/login.html');
 });
 
 app.post('/login', function(req, res) {
     
 });
 
+https.createServer(options, app).listen(8443, function () {
+    console.log('Secure server, 8443');
+})
+
+/*
 app.listen(8001, function() {
     console.log('Server is running on port 8001');
 });
+*/
 
 /*
 MongoClient.connect(url, function (err, db) {
