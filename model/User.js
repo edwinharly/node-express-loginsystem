@@ -1,27 +1,37 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/node-express-loginsystem');
 
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  //console.log('connected');
+  console.log('db is connected');
 });
 
-var userSchema = mongoose.Schema({ name: String, password: String });
-var User = mongoose.model('User', userSchema);
+const userSchema = mongoose.Schema({ name: String, password: String });
+const User = mongoose.model('User', userSchema);
 
-var registerUser = function(userDetail) {
-  var user = new User(userDetail);
+module.exports = User;
+
+/*
+let registerUser = function(userDetail) {
+  let user = new User(userDetail);
   user.save(function (err) {
     if (err) return console.error(err);
     console.log(user.name + ' saved');
   })
 }
 
-module.exports = registerUser;
+let authUser = function(userDetail) {
+	let user = new User(userDetail);
+	User.findOne({ name: user.name, password: user.password }, 'name', function(err, data) {
+		if (err) return handleError(err);
+		console.log(data + ' is found');
+	});
+}
+*/
 
 /*
-var user1 = new User({ name: 'Edwin', password: 'Harly'});
+let user1 = new User({ name: 'Edwin', password: 'Harly'});
 user1.save(function(err) {
   if (err) return console.error(err);
   console.log('User saved');
