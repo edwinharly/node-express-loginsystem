@@ -3,12 +3,21 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const https = require('https');
+const fs = require('fs');
 
 const User = require('./model/User.js');
 // let registerUser = require('./model/User.js').registerUser;
 // let authUser = require('./model/User.js').authUser;
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+
+const options = {
+    key: fs.readFileSync('ssl/key.pem'),
+    ca   : fs.readFileSync('ssl/csr.pem'),
+    cert : fs.readFileSync('ssl/cert.pem'),
+}
+
 /*
 let MongoClient = require('mongodb').MongoClient;
 let mongoose = require('mongoose');
@@ -45,12 +54,14 @@ app.post('/register', function(req, res) {
     let username = req.body.user.name;
     let password = req.body.user.pass;
     console.log(username, password);
+
     let newUser = new User({ name: username, password: password });
 	newUser.save(function (err) {
 		if (err) throw err;
 		console.log('New user saved');
-	})
-    res.end();
+	});
+	alert('Register Success!');
+    res.sendFile(__dirname + '/login.html');
 });
 
 app.post('/login', function(req, res) {
@@ -69,9 +80,15 @@ app.post('/login', function(req, res) {
 	res.end();
 });
 
+https.createServer(options, app).listen(8443, function () {
+    console.log('Secure server, 8443');
+})
+
+/*
 app.listen(8001, function() {
     console.log('Server is running on port 8001');
 });
+*/
 
 /*
 MongoClient.connect(url, function (err, db) {
